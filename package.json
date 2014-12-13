@@ -22,6 +22,9 @@
         "email" : "mail@substack.net",
         "url" : "http://substack.net"
     },
+    "dependencies": {
+        "nan": "^1.4.1"
+    },
     "devDependencies" : {
         "tap" : "~0.2.5",
         "put" : "~0.0.6"
