@@ -23,7 +23,7 @@
         "url" : "http://substack.net"
     },
     "dependencies": {
-        "nan": "^1.4.1"
+        "nan": ">=1.4.1"
     },
     "devDependencies" : {
         "tap" : "~0.2.5",

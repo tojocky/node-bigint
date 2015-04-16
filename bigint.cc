@@ -710,7 +710,7 @@ NAN_METHOD(BigInt::BitLength)
 
   size_t size = mpz_sizeinbase(*bigint->bigint_, 2);
 
-	Handle<Value> result = NanNew<Integer>(size);
+	Handle<Value> result = NanNew<Integer>(static_cast<uint32_t>(size));
 
 	NanReturnValue(result);
 }
