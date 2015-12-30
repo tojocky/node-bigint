@@ -46,8 +46,8 @@ using namespace std;
         uint64_t VAR = args[I]->ToInteger()->Value();
 
 #define WRAP_RESULT(RES, VAR)							\
-	Handle<Value> arg[1] = { NanNew<External>(*RES) };				\
-	Local<Object> VAR = NanNew<Function>(constructor)->NewInstance(1, arg);
+	Handle<Value> arg[1] = { Nan::New<External>(*RES) };				\
+	Local<Object> VAR = Nan::New<Function>(constructor)->NewInstance(1, arg);
 
 class BigInt : public node::ObjectWrap {
 	public:
@@ -56,7 +56,7 @@ class BigInt : public node::ObjectWrap {
 		static Persistent<Function> js_conditioner;
 
 	protected:
-		static Persistent<Function> constructor;
+    static Nan::Persistent<v8::Function> constructor;
 
 		BigInt(const String::Utf8Value& str, uint64_t base);
 		BigInt(uint64_t num);
@@ -103,54 +103,54 @@ class BigInt : public node::ObjectWrap {
 
 static gmp_randstate_t *		randstate	= NULL;
 
-Persistent<Function> BigInt::constructor;
+Nan::Persistent<v8::Function> BigInt::constructor;
 
 Persistent<Function> BigInt::js_conditioner;
 
 void BigInt::Initialize(v8::Handle<v8::Object> target) {
-	NanScope();
-	
-	Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
+  Nan::HandleScope scope;
+
+	Local<FunctionTemplate> tpl = Nan::New<FunctionTemplate>(New);
 
 	tpl->InstanceTemplate()->SetInternalFieldCount(1);
-	tpl->SetClassName(NanNew("BigInt"));
+	tpl->SetClassName(Nan::New("BigInt").ToLocalChecked());
 
-	NODE_SET_PROTOTYPE_METHOD(tpl, "toString", ToString);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "badd", Badd);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bsub", Bsub);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bmul", Bmul);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bdiv", Bdiv);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "uadd", Uadd);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "usub", Usub);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "umul", Umul);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "udiv", Udiv);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "umul2exp", Umul_2exp);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "udiv2exp", Udiv_2exp);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "babs", Babs);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bneg", Bneg);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bmod", Bmod);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "umod", Umod);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bpowm", Bpowm);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "upowm", Upowm);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "upow", Upow);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "uupow", Uupow);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "brand0", Brand0);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "probprime", Probprime);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "nextprime", Nextprime);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bcompare", Bcompare);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "scompare", Scompare);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "ucompare", Ucompare);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "band", Band);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bor", Bor);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bxor", Bxor);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "binvertm", Binvertm);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bsqrt", Bsqrt);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "broot", Broot);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bitLength", BitLength);
-	NODE_SET_PROTOTYPE_METHOD(tpl, "bgcd", Bgcd);
+  Nan::SetPrototypeMethod(tpl, "toString", ToString);
+	Nan::SetPrototypeMethod(tpl, "badd", Badd);
+	Nan::SetPrototypeMethod(tpl, "bsub", Bsub);
+	Nan::SetPrototypeMethod(tpl, "bmul", Bmul);
+	Nan::SetPrototypeMethod(tpl, "bdiv", Bdiv);
+	Nan::SetPrototypeMethod(tpl, "uadd", Uadd);
+	Nan::SetPrototypeMethod(tpl, "usub", Usub);
+	Nan::SetPrototypeMethod(tpl, "umul", Umul);
+	Nan::SetPrototypeMethod(tpl, "udiv", Udiv);
+	Nan::SetPrototypeMethod(tpl, "umul2exp", Umul_2exp);
+	Nan::SetPrototypeMethod(tpl, "udiv2exp", Udiv_2exp);
+	Nan::SetPrototypeMethod(tpl, "babs", Babs);
+	Nan::SetPrototypeMethod(tpl, "bneg", Bneg);
+	Nan::SetPrototypeMethod(tpl, "bmod", Bmod);
+	Nan::SetPrototypeMethod(tpl, "umod", Umod);
+	Nan::SetPrototypeMethod(tpl, "bpowm", Bpowm);
+	Nan::SetPrototypeMethod(tpl, "upowm", Upowm);
+	Nan::SetPrototypeMethod(tpl, "upow", Upow);
+	Nan::SetPrototypeMethod(tpl, "uupow", Uupow);
+	Nan::SetPrototypeMethod(tpl, "brand0", Brand0);
+	Nan::SetPrototypeMethod(tpl, "probprime", Probprime);
+	Nan::SetPrototypeMethod(tpl, "nextprime", Nextprime);
+	Nan::SetPrototypeMethod(tpl, "bcompare", Bcompare);
+	Nan::SetPrototypeMethod(tpl, "scompare", Scompare);
+	Nan::SetPrototypeMethod(tpl, "ucompare", Ucompare);
+	Nan::SetPrototypeMethod(tpl, "band", Band);
+	Nan::SetPrototypeMethod(tpl, "bor", Bor);
+	Nan::SetPrototypeMethod(tpl, "bxor", Bxor);
+	Nan::SetPrototypeMethod(tpl, "binvertm", Binvertm);
+	Nan::SetPrototypeMethod(tpl, "bsqrt", Bsqrt);
+	Nan::SetPrototypeMethod(tpl, "broot", Broot);
+	Nan::SetPrototypeMethod(tpl, "bitLength", BitLength);
+	Nan::SetPrototypeMethod(tpl, "bgcd", Bgcd);
 
-	NanAssignPersistent(constructor, tpl->GetFunction());
-	target->Set(NanNew("BigInt"), tpl->GetFunction());
+	constructor.Reset(tpl->GetFunction());
+	target->Set(Nan::New("BigInt").ToLocalChecked(), tpl->GetFunction());
 }
 
 BigInt::BigInt (const v8::String::Utf8Value& str, uint64_t base) : ObjectWrap ()
@@ -198,14 +198,14 @@ BigInt::~BigInt ()
 
 NAN_METHOD(BigInt::New)
 {
-	NanScope();
+  Nan::HandleScope scope;
 	if(!args.IsConstructCall()) {
 		int len = args.Length();
 		Handle<Value>* newArgs = new Handle<Value>[len];
 		for(int i = 0; i < len; i++) {
 			newArgs[i] = args[i];
 		}
-		Handle<Value> newInst = NanNew<Function>(constructor)->NewInstance(len, newArgs);
+		Handle<Value> newInst = Nan::New<Function>(constructor)->NewInstance(len, newArgs);
 		delete[] newArgs;
 		NanReturnValue(newInst);
 	}
@@ -217,20 +217,20 @@ NAN_METHOD(BigInt::New)
 		bigint = new BigInt(num);
 	} else {
 		int len = args.Length();
-		Local<Object> ctx = NanNew<Object>();
+		Local<Object> ctx = Nan::New<Object>();
 		Handle<Value>* newArgs = new Handle<Value>[len];
 		for(int i = 0; i < len; i++) {
 			newArgs[i] = args[i];
 		}
-		//Local<Value> obj = NanMakeCallback(ctx, NanNew<Function>(js_conditioner), args.Length(), newArgs);
-		Local<Value> obj = NanNew<Function>(js_conditioner)->Call(ctx, args.Length(), newArgs);
+		//Local<Value> obj = NanMakeCallback(ctx, Nan::New<Function>(js_conditioner), args.Length(), newArgs);
+		Local<Value> obj = Nan::New<Function>(js_conditioner)->Call(ctx, args.Length(), newArgs);
 
 		if(!*obj) {
 			return NanThrowError("Invalid type passed to bigint constructor");
 		}
 
-		String::Utf8Value str(obj->ToObject()->Get(NanNew("num"))->ToString());
-		base = obj->ToObject()->Get(NanNew("base"))->ToNumber()->Value();
+		String::Utf8Value str(obj->ToObject()->Get(Nan::New("num").ToLocalChecked())->ToString());
+		base = obj->ToObject()->Get(Nan::New("base").ToLocalChecked())->ToNumber()->Value();
 
 		bigint = new BigInt(str, base);
 		delete[] newArgs;
@@ -243,8 +243,8 @@ NAN_METHOD(BigInt::New)
 
 NAN_METHOD(BigInt::ToString)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	uint64_t base = 10;
 
@@ -257,16 +257,18 @@ NAN_METHOD(BigInt::ToString)
 	}
 	char *to = mpz_get_str(0, base, *bigint->bigint_);
 
-	Handle<Value> result = NanNew(to);
+	Handle<Value> result = Nan::New(to).ToLocalChecked();
 	free(to);
 
 	NanReturnValue(result);
 }
 
+calChecked()
 NAN_METHOD(BigInt::Badd)
 {
+  calChecked()
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
@@ -281,8 +283,8 @@ NAN_METHOD(BigInt::Badd)
 
 NAN_METHOD(BigInt::Bsub)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
@@ -290,20 +292,20 @@ NAN_METHOD(BigInt::Bsub)
 	mpz_sub(*res, *bigint->bigint_, *bi->bigint_);
 
 	WRAP_RESULT(res, result);
-	
+
 	NanReturnValue(result);
 }
 
 NAN_METHOD(BigInt::Bmul)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_mul(*res, *bigint->bigint_, *bi->bigint_);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -311,14 +313,14 @@ NAN_METHOD(BigInt::Bmul)
 
 NAN_METHOD(BigInt::Bdiv)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_div(*res, *bigint->bigint_, *bi->bigint_);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -326,14 +328,14 @@ NAN_METHOD(BigInt::Bdiv)
 
 NAN_METHOD(BigInt::Uadd)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_add_ui(*res, *bigint->bigint_, x);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -341,14 +343,14 @@ NAN_METHOD(BigInt::Uadd)
 
 NAN_METHOD(BigInt::Usub)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_sub_ui(*res, *bigint->bigint_, x);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -356,14 +358,14 @@ NAN_METHOD(BigInt::Usub)
 
 NAN_METHOD(BigInt::Umul)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_mul_ui(*res, *bigint->bigint_, x);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -371,14 +373,14 @@ NAN_METHOD(BigInt::Umul)
 
 NAN_METHOD(BigInt::Udiv)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_div_ui(*res, *bigint->bigint_, x);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -386,14 +388,14 @@ NAN_METHOD(BigInt::Udiv)
 
 NAN_METHOD(BigInt::Umul_2exp)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_mul_2exp(*res, *bigint->bigint_, x);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -401,14 +403,14 @@ NAN_METHOD(BigInt::Umul_2exp)
 
 NAN_METHOD(BigInt::Udiv_2exp)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_div_2exp(*res, *bigint->bigint_, x);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -416,13 +418,13 @@ NAN_METHOD(BigInt::Udiv_2exp)
 
 NAN_METHOD(BigInt::Babs)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_abs(*res, *bigint->bigint_);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -430,13 +432,13 @@ NAN_METHOD(BigInt::Babs)
 
 NAN_METHOD(BigInt::Bneg)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_neg(*res, *bigint->bigint_);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -444,14 +446,14 @@ NAN_METHOD(BigInt::Bneg)
 
 NAN_METHOD(BigInt::Bmod)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_mod(*res, *bigint->bigint_, *bi->bigint_);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -459,14 +461,14 @@ NAN_METHOD(BigInt::Bmod)
 
 NAN_METHOD(BigInt::Umod)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_mod_ui(*res, *bigint->bigint_, x);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -474,8 +476,8 @@ NAN_METHOD(BigInt::Umod)
 
 NAN_METHOD(BigInt::Bpowm)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi1 = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	BigInt *bi2 = ObjectWrap::Unwrap<BigInt>(args[1]->ToObject());
@@ -490,49 +492,49 @@ NAN_METHOD(BigInt::Bpowm)
 
 NAN_METHOD(BigInt::Upowm)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[1]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_powm_ui(*res, *bigint->bigint_, x, *bi->bigint_);
-	
+
 	WRAP_RESULT(res, result);
-	
+
 	NanReturnValue(result);	
 }
 
 NAN_METHOD(BigInt::Upow)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_pow_ui(*res, *bigint->bigint_, x);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
 }
 
-/* 
+/*
  * This makes no sense?  It doesn't act on the object but is a
  * prototype method.
  */
 NAN_METHOD(BigInt::Uupow)
 {
-	NanScope();
+  Nan::HandleScope scope;
 
 	REQ_UINT64_ARG(0, x);
 	REQ_UINT64_ARG(1, y);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
 	mpz_ui_pow_ui(*res, x, y);
-	
+
 	WRAP_RESULT(res, result);
 
 	NanReturnValue(result);
@@ -540,19 +542,19 @@ NAN_METHOD(BigInt::Uupow)
 
 NAN_METHOD(BigInt::Brand0)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
-	
+
 	if(randstate == NULL) {
 		randstate = (gmp_randstate_t *) malloc(sizeof(gmp_randstate_t));
 		gmp_randinit_default(*randstate);
 		unsigned long seed = rand() + (time(NULL) * 1000) + clock();
         	gmp_randseed_ui(*randstate, seed);
 	}
-	
+
 	mpz_urandomm(*res, *randstate, *bigint->bigint_);
 
 	WRAP_RESULT(res, result);
@@ -562,18 +564,18 @@ NAN_METHOD(BigInt::Brand0)
 
 NAN_METHOD(BigInt::Probprime)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
-	
+
 	REQ_UINT32_ARG(0, reps);
 
-	NanReturnValue(NanNew<Number>(mpz_probab_prime_p(*bigint->bigint_, reps)));
+	NanReturnValue(Nan::New<Number>(mpz_probab_prime_p(*bigint->bigint_, reps)));
 }
 
 NAN_METHOD(BigInt::Nextprime)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
@@ -586,38 +588,38 @@ NAN_METHOD(BigInt::Nextprime)
 
 NAN_METHOD(BigInt::Bcompare)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
-	
+
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 
-	NanReturnValue(NanNew<Number>(mpz_cmp(*bigint->bigint_, *bi->bigint_)));
+	NanReturnValue(Nan::New<Number>(mpz_cmp(*bigint->bigint_, *bi->bigint_)));
 }
 
 NAN_METHOD(BigInt::Scompare)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
-	
+
 	REQ_INT64_ARG(0, x);
-	
-	NanReturnValue(NanNew<Number>(mpz_cmp_si(*bigint->bigint_, x)));
+
+	NanReturnValue(Nan::New<Number>(mpz_cmp_si(*bigint->bigint_, x)));
 }
 
 NAN_METHOD(BigInt::Ucompare)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
-	
+
 	REQ_UINT64_ARG(0, x);
 
-	NanReturnValue(NanNew<Number>(mpz_cmp_ui(*bigint->bigint_, x)));
+	NanReturnValue(Nan::New<Number>(mpz_cmp_ui(*bigint->bigint_, x)));
 }
 
 NAN_METHOD(BigInt::Band)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
@@ -631,8 +633,8 @@ NAN_METHOD(BigInt::Band)
 
 NAN_METHOD(BigInt::Bor)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
@@ -646,8 +648,8 @@ NAN_METHOD(BigInt::Bor)
 
 NAN_METHOD(BigInt::Bxor)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
@@ -661,8 +663,8 @@ NAN_METHOD(BigInt::Bxor)
 
 NAN_METHOD(BigInt::Binvertm)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
@@ -676,8 +678,8 @@ NAN_METHOD(BigInt::Binvertm)
 
 NAN_METHOD(BigInt::Bsqrt)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
 	mpz_init(*res);
@@ -690,8 +692,8 @@ NAN_METHOD(BigInt::Bsqrt)
 
 NAN_METHOD(BigInt::Broot)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	REQ_UINT64_ARG(0, x);
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
@@ -705,20 +707,20 @@ NAN_METHOD(BigInt::Broot)
 
 NAN_METHOD(BigInt::BitLength)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
   size_t size = mpz_sizeinbase(*bigint->bigint_, 2);
 
-	Handle<Value> result = NanNew<Integer>(static_cast<uint32_t>(size));
+	Handle<Value> result = Nan::New<Integer>(static_cast<uint32_t>(size));
 
 	NanReturnValue(result);
 }
 
 NAN_METHOD(BigInt::Bgcd)
 {
+  Nan::HandleScope scope;
 	BigInt *bigint = ObjectWrap::Unwrap<BigInt>(args.This());
-	NanScope();
 
 	BigInt *bi = ObjectWrap::Unwrap<BigInt>(args[0]->ToObject());
 	mpz_t *res = (mpz_t *) malloc(sizeof(mpz_t));
@@ -732,7 +734,7 @@ NAN_METHOD(BigInt::Bgcd)
 
 static NAN_METHOD(SetJSConditioner)
 {
-	NanScope();
+  Nan::HandleScope scope;
 
 	Local<Function> cb = args[0].As<Function>();
         NanAssignPersistent(BigInt::js_conditioner, cb);
@@ -743,10 +745,10 @@ static NAN_METHOD(SetJSConditioner)
 extern "C" void
 init (Handle<Object> target)
 {
-	NanScope();
+  Nan::HandleScope scope;
 
 	BigInt::Initialize(target);
-	target->Set(NanNew("setJSConditioner"), NanNew<FunctionTemplate>(SetJSConditioner)->GetFunction());
+	target->Set(Nan::New("setJSConditioner").ToLocalChecked(), Nan::New<FunctionTemplate>(SetJSConditioner)->GetFunction());
 }
 
 NODE_MODULE(bigint, init);
